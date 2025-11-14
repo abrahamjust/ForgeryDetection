@@ -12,16 +12,12 @@ from sklearn.metrics import confusion_matrix, classification_report
 import joblib
 import random
 
-# ============================================================
-# 🔇 SUPPRESS WARNINGS
-# ============================================================
+
 warnings.filterwarnings('ignore')
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
-# ============================================================
-# ⚙️ CONFIGURATION
-# ============================================================
+
 DATA_PATH = "data/CASIA2"
 BATCH_SIZE = 16
 IMAGE_SIZE = 224
@@ -29,9 +25,7 @@ NUM_EPOCHS = 12
 LEARNING_RATE = 1e-4
 HYBRID_RATIO = 2  # 2:1 ratio (Authentic:Tampered)
 
-# ============================================================
-# 📦 HYBRID DATASET CLASS
-# ============================================================
+
 class HybridCASIADataset(Dataset):
     def __init__(self, image_paths, gt_mapping, transform=None):
         self.image_paths = []
@@ -71,9 +65,6 @@ class HybridCASIADataset(Dataset):
                 dummy_image = self.transform(dummy_image)
             return dummy_image, 0
 
-# ============================================================
-# 🧠 BINARY CLASSIFIER
-# ============================================================
 class BinaryClassifier(nn.Module):
     def __init__(self, num_classes=2):
         super().__init__()
@@ -83,9 +74,7 @@ class BinaryClassifier(nn.Module):
     def forward(self, x):
         return self.backbone(x)
 
-# ============================================================
-# 📊 HYBRID DATA PREPARATION (2:1 Ratio)
-# ============================================================
+
 def prepare_hybrid_data_loaders():
     from data_utils import load_casia_dataset, split_dataset
     
@@ -142,9 +131,7 @@ def prepare_hybrid_data_loaders():
     
     return train_loader, test_loader
 
-# ============================================================
-# 📈 ENHANCED VALIDATION METRICS
-# ============================================================
+
 def validate_with_metrics(model, test_loader, device, epoch):
     model.eval()
     all_preds = []
@@ -190,9 +177,7 @@ def validate_with_metrics(model, test_loader, device, epoch):
     
     return accuracy, cm, report
 
-# ============================================================
-# 🏋️ HYBRID TRAINING FUNCTION
-# ============================================================
+
 def train_hybrid_classifier():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"🖥️  Using device: {device}")
@@ -299,9 +284,7 @@ def train_hybrid_classifier():
     
     return history
 
-# ============================================================
-# 🎯 MAIN EXECUTION
-# ============================================================
+
 if __name__ == "__main__":
     os.makedirs("saved_models/hybrid_models", exist_ok=True)
     

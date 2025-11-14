@@ -58,7 +58,7 @@ def featureMatching(keypoints, descriptors):
 
 def filterOutliers(cluster, points):
     cluster_count = Counter(cluster)
-    remove = [c for c in cluster_count if cluster_count[c] <= 1]  # ✅ allow small clusters
+    remove = [c for c in cluster_count if cluster_count[c] <= 1] 
 
     mask = np.array([c not in remove for c in cluster])
     cluster = cluster[mask]
@@ -106,7 +106,7 @@ def detect_copy_move(image_path, output_dir="final_results"):
     if p1 is None:
         return False
 
-    clusters, p1c, p2c = hierarchicalClustering(p1, p2, 'ward', 1.5)  # ✅ softer threshold
+    clusters, p1c, p2c = hierarchicalClustering(p1, p2, 'ward', 1.5)  
 
     if len(clusters) == 0:
         return False

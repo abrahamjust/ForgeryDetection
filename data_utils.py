@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 
 
 # ==============================
-# 📦 CONFIGURATION
+# CONFIGURATION
 # ==============================
 PATCH_SIZE = 96
 SIFT_FEATURES = 500  # balanced (400–800 recommended)
@@ -19,7 +19,7 @@ ENTROPY_RADIUS = 3
 
 
 # ==============================
-# 🔹 UTIL FUNCTIONS
+# UTIL FUNCTIONS
 # ==============================
 def load_casia_dataset(base_path):
     """
@@ -119,7 +119,7 @@ def split_dataset(authentic_paths, tampered_paths, test_size=0.3):
 
 
 # ==============================
-# 🔹 ENTROPY + SIFT EXTRACTION
+# ENTROPY + SIFT EXTRACTION
 # ==============================
 def compute_entropy(img_gray, radius=ENTROPY_RADIUS):
     """
@@ -158,7 +158,7 @@ def extract_sift_on_entropy(img, entropy_radius=ENTROPY_RADIUS, max_kp=SIFT_FEAT
 
 
 # ==============================
-# 🔹 PATCH EXTRACTION (safe)
+# PATCH EXTRACTION (safe)
 # ==============================
 def extract_patch(gray, kp, size=PATCH_SIZE):
     """
@@ -187,7 +187,7 @@ def extract_patch(gray, kp, size=PATCH_SIZE):
 
 
 # ==============================
-# 🔹 PAIR GENERATION
+# PAIR GENERATION
 # ==============================
 def generate_pairs_from_split(split, gt_mapping, patch_size=PATCH_SIZE, max_pairs=5000):
     """
@@ -305,7 +305,7 @@ def generate_pairs_from_split(split, gt_mapping, patch_size=PATCH_SIZE, max_pair
     return pairs, labels
 
 # ==============================
-# 🔹 DEBUG SIFT EXTRACTION
+# DEBUG SIFT EXTRACTION
 # ==============================
 def debug_sift_extraction(img_path):
     """Debug SIFT feature extraction for a single image"""
@@ -341,7 +341,7 @@ def debug_sift_extraction(img_path):
         print(f"Successful patches: {successful_patches}/{min(3, len(kps))}")
 
 # ==============================
-# 🔹 DATASET CLASS
+# DATASET CLASS
 # ==============================
 class PairDataset(Dataset):
     def __init__(self, pairs, labels):
@@ -361,7 +361,7 @@ class PairDataset(Dataset):
 
 
 # ==============================
-# 🔹 SAVE / LOAD UTILITIES
+# SAVE / LOAD UTILITIES
 # ==============================
 def save_pairs(pairs, labels, path):
     joblib.dump({"pairs": pairs, "labels": labels}, path)
@@ -374,7 +374,7 @@ def load_pairs(path):
     return data["pairs"], data["labels"]
 
 # ============================================================
-# ✅ WRAPPER FUNCTION for backward compatibility
+# WRAPPER FUNCTION for backward compatibility
 # ============================================================
 def generate_pairs_from_split(split, gt_mapping, patch_size=PATCH_SIZE, max_pairs=5000):
     """
@@ -387,7 +387,7 @@ def generate_pairs_from_split(split, gt_mapping, patch_size=PATCH_SIZE, max_pair
 
 
 # ============================================================
-# ✅ Main renamed generator
+# Main renamed generator
 # ============================================================
 def generate_pairs(split, gt_mapping, patch_size=PATCH_SIZE, max_pairs=5000):
     """

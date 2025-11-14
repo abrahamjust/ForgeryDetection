@@ -6,7 +6,7 @@ import torch
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore', category=DeprecationWarning)
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Your pipeline imports
 from infer import load_model, predict_image_with_localization
