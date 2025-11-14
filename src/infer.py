@@ -205,7 +205,7 @@ def load_model(model_path, device):
         model.load_state_dict(new_state_dict, strict=False)
         model.to(device)
         model.eval()
-        print("✅ Model loaded with Grad-CAM support!")
+        print("Model loaded with Grad-CAM support!")
         return model
     except Exception as e:
         print(f"❌ Error loading model: {e}")
@@ -240,7 +240,8 @@ def predict_image_with_localization(model, image_path, device, image_size=224):
         print(f"❌ Prediction error: {e}")
         raise
 
-def save_single_result(heatmap, image_path, output_dir="detection_results"):
+#def save_single_result(heatmap, image_path, output_dir="detection_results"):
+def save_single_result(heatmap, image_path, output_dir="results"):
     """Save result with proper filename"""
     os.makedirs(output_dir, exist_ok=True)
     original_filename = os.path.basename(image_path)
@@ -255,7 +256,7 @@ def save_single_result(heatmap, image_path, output_dir="detection_results"):
 def display_menu():
     """Display the main menu"""
     print("\n" + "="*50)
-    print("🎯 IMAGE TAMPER DETECTION SYSTEM")
+    print("IMAGE TAMPER DETECTION SYSTEM")
     print("="*50)
     print("1. Test single image")
     print("2. Test multiple images in folder")
@@ -280,11 +281,11 @@ def test_multiple_images(model, device, folder_path):
         print("❌ No images found in folder!")
         return
     
-    print(f"📁 Found {len(image_files)} images")
+    print(f"Found {len(image_files)} images")
     
     for i, image_path in enumerate(image_files, 1):
         try:
-            print(f"\n🔍 Processing {i}/{len(image_files)}: {os.path.basename(image_path)}")
+            print(f"\nProcessing {i}/{len(image_files)}: {os.path.basename(image_path)}")
             pred_class, confidence, heatmap, original = predict_image_with_localization(model, image_path, device)
             
             status = "TAMPERED" if pred_class == 1 else "AUTHENTIC"
@@ -292,12 +293,12 @@ def test_multiple_images(model, device, folder_path):
             
             # Save result
             output_path = save_single_result(heatmap, image_path)
-            print(f"   💾 Saved: {os.path.basename(output_path)}")
+            print(f"   Saved: {os.path.basename(output_path)}")
             
         except Exception as e:
             print(f"   ❌ Error processing {image_path}: {e}")
     
-    print(f"\n✅ Completed processing {len(image_files)} images!")
+    print(f"\nCompleted processing {len(image_files)} images!")
 
 # ============================================================
 # 🎯 MAIN APPLICATION WITH MENU
@@ -306,8 +307,8 @@ if __name__ == "__main__":
     MODEL_PATH = "saved_models/best_hybrid_classifier.pth"
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    print(f"🖥️ Using device: {DEVICE}")
-    print("🎨 Using PALE PINK CIRCLES with shading for tampered regions")
+    print(f"Using device: {DEVICE}")
+    print("Using PALE PINK CIRCLES with shading for tampered regions")
     
     model = load_model(MODEL_PATH, DEVICE)
     if model is None:
@@ -341,13 +342,13 @@ if __name__ == "__main__":
                     
                     # Save
                     output_path = save_single_result(heatmap, image_path)
-                    print(f"💾 Saved: {output_path}")
+                    print(f"Saved: {output_path}")
                     
                     if pred_class == 1:
-                        print("🎀 Pale pink circles show WHERE tampering was detected")
-                        print("💫 Circles have gradient shading (lighter in center)")
+                        print("Pale pink circles show WHERE tampering was detected")
+                        print("Circles have gradient shading (lighter in center)")
                     else:
-                        print("🔵 Image marked as authentic - no tampering detected")
+                        print("Image marked as authentic - no tampering detected")
                     
                 except Exception as e:
                     print(f"❌ Error: {e}")
@@ -373,7 +374,7 @@ if __name__ == "__main__":
                 print("❌ Model file not found!")
                 
         elif choice == '4':
-            print("👋 Thank you for using Image Tamper Detection System!")
+            print("Thank you for using Image Tamper Detection System!")
             break
             
         else:

@@ -117,9 +117,10 @@ class SIFTAnalyzer:
         
         return anomalies
     
-    def analyze_image(self, image_path, output_dir="final_results"):
+    #def analyze_image(self, image_path, output_dir="final_results"):
+    def analyze_image(self, image_path, output_dir="results"):
         """Comprehensive SIFT analysis with enhanced visualization"""
-        print("🔍 Starting Enhanced SIFT Analysis...")
+        print("Starting Enhanced SIFT Analysis...")
         
         # Load and preprocess image
         img = cv2.imread(image_path)
@@ -136,7 +137,7 @@ class SIFTAnalyzer:
         # Detect keypoints and descriptors
         keypoints, descriptors = self.sift.detectAndCompute(enhanced_gray, None)
         
-        print(f"   ✅ Detected {len(keypoints)} keypoints")
+        print(f"   Detected {len(keypoints)} keypoints")
         
         # Comprehensive analysis
         distribution_status, region_stats, region_counts = self._analyze_keypoint_distribution(keypoints, img.shape)
@@ -151,8 +152,8 @@ class SIFTAnalyzer:
         output_path = os.path.join(output_dir, f"sift_analysis_{os.path.basename(image_path)}")
         cv2.imwrite(output_path, visualization)
         
-        print(f"   ✅ SIFT analysis saved: {output_path}")
-        print(f"   📊 Distribution: {distribution_status}")
+        print(f"   SIFT analysis saved: {output_path}")
+        print(f"   Distribution: {distribution_status}")
         if anomalies:
             print(f"   ⚠️  Anomalies: {len(anomalies)} detected")
         

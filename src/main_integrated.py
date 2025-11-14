@@ -10,17 +10,22 @@ from copy_move_detector import detect_copy_move
 
 # ---------------- CONFIG ---------------- #
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_PATH = "saved_models/best_hybrid_classifier.pth"
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))   # …/project/src
+ROOT_DIR = os.path.dirname(CURRENT_DIR)                    # …/project
+MODEL_PATH = os.path.join(ROOT_DIR, "saved_models", "best_hybrid_classifier.pth")
+# MODEL_PATH = "../saved_models/best_hybrid_classifier.pth"
 
 model = load_model(MODEL_PATH, DEVICE)
-os.makedirs("final_results", exist_ok=True)
+#os.makedirs("final_results", exist_ok=True)
+os.makedirs("../results", exist_ok=True)
 
 
 def run_forgery_detection(image_path):
     image_name = os.path.basename(image_path)
     name_no_ext = os.path.splitext(image_name)[0]
 
-    print("\n🚀 Starting Forgery Detection...\n")
+    print("\nStarting Forgery Detection...\n")
 
     # -------- 1) CLASSIFIER + HEATMAP -------- #
     predicted_class, confidence, heatmap_image, _ = predict_image_with_localization(
@@ -28,10 +33,11 @@ def run_forgery_detection(image_path):
     )
 
     # Save heatmap overlay
-    heatmap_out = f"final_results/{name_no_ext}_heatmap.png"
+    #heatmap_out = f"final_results/{name_no_ext}_heatmap.png"
+    heatmap_out = f"../results/{name_no_ext}_heatmap.png"
     heatmap_bgr = cv2.cvtColor(np.array(heatmap_image), cv2.COLOR_RGB2BGR)
     cv2.imwrite(heatmap_out, heatmap_bgr)
-    print(f"✅ Heatmap saved → {heatmap_out}")
+    print(f"Heatmap saved → {heatmap_out}")
 
     status_text = "TAMPERED" if predicted_class == 1 else "AUTHENTIC"
     status_color = "red" if predicted_class == 1 else "green"
@@ -40,12 +46,14 @@ def run_forgery_detection(image_path):
     heat_rgb = np.array(heatmap_image)
 
     # -------- 2) SIFT -------- #
-    print("\n🔍 Running SIFT Keypoint Analysis...")
+    print("\nRunning SIFT Keypoint Analysis...")
     kp_count, sift_saved_path, keypoints, descriptors, sift_stats = enhanced_sift_analysis(
-        image_path, output_dir="final_results"
+        #image_path, output_dir="final_results"
+        image_path, output_dir="../results"
     )
 
-    sift_out = f"final_results/{name_no_ext}_sift.jpg"
+    #sift_out = f"final_results/{name_no_ext}_sift.jpg"
+    sift_out = f"../results/{name_no_ext}_sift.jpg"
     try:
         os.rename(sift_saved_path, sift_out)
     except:
@@ -53,11 +61,12 @@ def run_forgery_detection(image_path):
 
     sift_img = cv2.imread(sift_out)
     sift_img = cv2.cvtColor(sift_img, cv2.COLOR_BGR2RGB)
-    print(f"✅ SIFT result saved → {sift_out}")
+    print(f"SIFT result saved → {sift_out}")
 
     # -------- 3) COPY-MOVE -------- #
-    print("\n🔁 Running Copy-Move Forgery Detection...")
-    result = detect_copy_move(image_path, output_dir="final_results")
+    print("\nRunning Copy-Move Forgery Detection...")
+    #result = detect_copy_move(image_path, output_dir="final_results")
+    result = detect_copy_move(image_path, output_dir="../results")
 
     # Handle both return types: (bool, path) or just bool
     if isinstance(result, tuple):
@@ -78,7 +87,7 @@ def run_forgery_detection(image_path):
             cm_img_small = cv2.resize(cm_img, (w//2, h//2), interpolation=cv2.INTER_AREA)
             cm_img = cv2.resize(cm_img_small, (w, h), interpolation=cv2.INTER_CUBIC)
             
-            print(f"✅ Copy-Move result saved → {copy_move_path}")
+            print(f"Copy-Move result saved → {copy_move_path}")
         else:
             cm_img = None
             print("❌ Failed to load copy-move result image")
@@ -152,7 +161,8 @@ def run_forgery_detection(image_path):
     # plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.show()
 
-    print("\n🎯 All results saved in → final_results/\n")
+    #print("\n🎯 All results saved in → final_results/\n")
+    print("\nAll results saved in → results/\n")
 
 
 # ---------------- MAIN ---------------- #
@@ -161,7 +171,7 @@ if __name__ == "__main__":
     while True:
         image_path = input("Enter image path (or 'quit'): ")
         if image_path.lower() == "quit":
-            print("\n👋 Exiting...")
+            print("\nExiting...")
             break
         if not os.path.exists(image_path):
             print("❌ File not found, try again.\n")

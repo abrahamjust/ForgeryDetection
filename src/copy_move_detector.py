@@ -96,7 +96,8 @@ def plotImage(img, p1, p2, C, save_path):
     plt.close(fig)  # Close the figure instead of clf()
 
 
-def detect_copy_move(image_path, output_dir="final_results"):
+#def detect_copy_move(image_path, output_dir="final_results"):
+def detect_copy_move(image_path, output_dir="results"):
     os.makedirs(output_dir, exist_ok=True)
 
     image = readImage(image_path)
